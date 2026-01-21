@@ -89,7 +89,7 @@ function Home() {
       </ContainerButtons>
 
       <ContainerListQuestions>
-        {laps.map((lap, idx) => (
+        {laps.map((lap) => (
           <p key={lap.id}>
             {lap.correctly ? "✅" : "❌"} - {lap.question_id} -{" "}
             {formatTime(lap.seconds).hours}:{formatTime(lap.seconds).minutes}:

@@ -13,7 +13,7 @@ import {
 import { useEndQuestionsDialog } from "../../hooks/useEndQuestionsDialog";
 import { useLapsStore } from "../../store/useLapsStore";
 import { formatTime } from "../../../../utils/formatTime";
-import { Pointer, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 
 const EndQuestionsDialog = () => {
   const [step, setStep] = useState<number>(0);
@@ -64,7 +64,7 @@ const EndQuestionsDialog = () => {
               Revise as questões que você fez!
             </TitleContainerEndQuestionsDialog>
             <ContainerListQuestions>
-              {laps.map((lap, idx) => (
+              {laps.map((lap) => (
                 <>
                   <ContainerQuestionListQuestions>
                     <QuestionListQuestions key={lap.id}>
