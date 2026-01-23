@@ -24,3 +24,23 @@ export const addQuestion = (
     question.reason,
   );
 };
+
+export const updateQuestion = (
+  questionId: string,
+  correctly: boolean,
+  reason: string | null,
+) => {
+  const question = {
+    question_id: questionId,
+    correctly: correctly,
+    reason: reason,
+  };
+
+  const updates = {
+    correctly,
+    reason,
+  };
+
+  const updateLap = useLapsStore.getState().updateLap;
+  updateLap(question.question_id, updates);
+};

@@ -13,26 +13,7 @@ import { addQuestion } from "../../scripts/actionsStudy";
 import { useActualQuestion } from "../../hooks/useActualQuestion";
 import { useTimer } from "../../hooks/useTimer";
 import { useLapsStore } from "../../store/useLapsStore";
-
-const reasonsForMissQuestion = [
-  {
-    id: crypto.randomUUID(),
-    reason: "Não sei o assunto.",
-  },
-  {
-    id: crypto.randomUUID(),
-    reason: "Esqueci o assunto.",
-  },
-  {
-    id: crypto.randomUUID(),
-    reason: "Não entendi a questão",
-  },
-  {
-    id: crypto.randomUUID(),
-    reason: "Outro",
-    isAnotherReason: true,
-  },
-];
+import { global } from "../../../../global";
 
 const MissQuestionDialog = () => {
   const { open, closeDialog } = useMissQuestionDialog();
@@ -74,7 +55,7 @@ const MissQuestionDialog = () => {
             Por qual motivo você errou a questão?
           </TitleContainerMissQuestionDialog>
           <ContainerMissQuestionDialog>
-            {reasonsForMissQuestion.map((item, idx) => (
+            {global.reasons.map((item, idx) => (
               <ContainerInputs key={idx}>
                 <ContainerInputsInput
                   id={item.id}

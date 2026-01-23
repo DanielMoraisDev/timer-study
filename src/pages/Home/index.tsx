@@ -1,19 +1,15 @@
 import { useEffect, useMemo } from "react";
-import {
-  ContainerButtons,
-  ContainerListQuestions,
-  ContainerTimerDisplay,
-  RootHome,
-} from "./styles";
+import { ContainerButtons, ContainerTimerDisplay, RootHome } from "./styles";
 import { addQuestion } from "./scripts/actionsStudy";
 import { useLapsStore } from "./store/useLapsStore";
 import { useTimer } from "./hooks/useTimer";
 import { useMissQuestionDialog } from "./hooks/useMissQuestionDialog";
-import AddQuestionDialog from "./components/MissQuestionDialog";
+import MissQuestionDialog from "./components/MissQuestionDialog";
 import { useActualQuestion } from "./hooks/useActualQuestion";
 import { useEndQuestionsDialog } from "./hooks/useEndQuestionsDialog";
 import EndQuestionsDialog from "./components/EndQuestionsDialog";
 import { formatTime } from "../../utils/formatTime";
+import ListQuestions from "./components/ListQuestions";
 
 function Home() {
   const { totalSeconds, isPaused, pause, resume } = useTimer();
@@ -32,6 +28,10 @@ function Home() {
   const handleMissQuestion = () => {
     openDialogMissQuestion();
   };
+
+  useEffect(() => {
+    console.log(laps);
+  }, [laps]);
 
   useEffect(() => {
     if (openMissQuestion) {
@@ -90,22 +90,9 @@ function Home() {
         </button>
       </ContainerButtons>
 
-      <ContainerListQuestions>
-        {laps.map((lap) => {
-          const durationSeconds =
-            lap.seconds - (lap.last_question_seconds || 0);
-          const time = formatTime(durationSeconds);
+      <ListQuestions />
 
-          return (
-            <p key={lap.id}>
-              {lap.correctly ? "✅" : "❌"} - {lap.question_id} - {time.hours}:
-              {time.minutes}:{time.seconds}
-            </p>
-          );
-        })}
-      </ContainerListQuestions>
-
-      <AddQuestionDialog />
+      <MissQuestionDialog />
       <EndQuestionsDialog />
     </RootHome>
   );

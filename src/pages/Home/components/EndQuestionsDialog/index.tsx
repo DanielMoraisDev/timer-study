@@ -1,24 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ButtonListQuestions,
   ContainerEndQuestionsDialog,
-  ContainerListQuestions,
-  ContainerQuestionListQuestions,
   OverlayEndQuestionsDialog,
-  QuestionListQuestions,
   RootEndQuestionsDialog,
-  SpanListQuestions,
   TitleContainerEndQuestionsDialog,
 } from "./styles";
 import { useEndQuestionsDialog } from "../../hooks/useEndQuestionsDialog";
-import { useLapsStore } from "../../store/useLapsStore";
-import { formatTime } from "../../../../utils/formatTime";
-import { SquarePen } from "lucide-react";
+import ListQuestions from "../ListQuestions";
 
 const EndQuestionsDialog = () => {
   const [step, setStep] = useState<number>(0);
   const { open, closeDialog } = useEndQuestionsDialog();
-  const laps = useLapsStore((s) => s.laps);
   const endQuestionsDialogRef = useRef<HTMLDivElement>(null);
 
   const handleCloseDialog = () => {
@@ -63,27 +55,7 @@ const EndQuestionsDialog = () => {
             <TitleContainerEndQuestionsDialog>
               Revise as questões que você fez!
             </TitleContainerEndQuestionsDialog>
-            <ContainerListQuestions>
-              {laps.map((lap) => (
-                <>
-                  <ContainerQuestionListQuestions>
-                    <QuestionListQuestions key={lap.id}>
-                      {lap.correctly ? "✅" : "❌"} - {lap.question_id} -{" "}
-                      {lap.seconds < 60
-                        ? null
-                        : `${formatTime(lap.seconds).minutes} min. e `}
-                      {formatTime(lap.seconds).seconds} segs.
-                    </QuestionListQuestions>
-                    <ButtonListQuestions>
-                      <SquarePen />
-                    </ButtonListQuestions>
-                  </ContainerQuestionListQuestions>
-                  {lap?.reason ? (
-                    <SpanListQuestions>- {lap?.reason}</SpanListQuestions>
-                  ) : null}
-                </>
-              ))}
-            </ContainerListQuestions>
+            <ListQuestions />
           </>
         );
       default:

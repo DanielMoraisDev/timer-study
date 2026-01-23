@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type TimerStore = {
+export type TimerStore = {
   totalSeconds: number;
   isPaused: boolean;
   intervalId: number | null;
