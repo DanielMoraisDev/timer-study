@@ -12,6 +12,7 @@ import { useMissQuestionDialog } from "../../hooks/useMissQuestionDialog";
 import { addQuestion } from "../../scripts/actionsStudy";
 import { useActualQuestion } from "../../hooks/useActualQuestion";
 import { useTimer } from "../../hooks/useTimer";
+import { useLapsStore } from "../../store/useLapsStore";
 
 const reasonsForMissQuestion = [
   {
@@ -36,6 +37,7 @@ const reasonsForMissQuestion = [
 const MissQuestionDialog = () => {
   const { open, closeDialog } = useMissQuestionDialog();
   const missQuestionDialogRef = useRef<HTMLDivElement>(null);
+  const laps = useLapsStore((s) => s.laps);
   const [selectedReason, setSelectedReason] = useState<string | undefined>(
     undefined,
   );
@@ -78,11 +80,14 @@ const MissQuestionDialog = () => {
                   id={item.id}
                   checked={selectedReason === item.id}
                   onChange={() => {
+                    const lastSeconds = laps.length > 0 ? laps[0].seconds : 0;
+
                     setSelectedReason(item.id);
                     addQuestion(
                       actualQuestionId,
                       totalSeconds,
                       false,
+                      lastSeconds,
                       item.reason,
                     );
                     setActualQuestionId();

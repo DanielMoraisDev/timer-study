@@ -74,7 +74,9 @@ function Home() {
         <button
           disabled={isPaused}
           onClick={() => {
-            addQuestion(actualQuestionId, totalSeconds, true);
+            const lastSeconds = laps.length > 0 ? laps[0].seconds : 0;
+
+            addQuestion(actualQuestionId, totalSeconds, true, lastSeconds);
             setActualQuestionId();
           }}
         >
@@ -89,13 +91,18 @@ function Home() {
       </ContainerButtons>
 
       <ContainerListQuestions>
-        {laps.map((lap) => (
-          <p key={lap.id}>
-            {lap.correctly ? "✅" : "❌"} - {lap.question_id} -{" "}
-            {formatTime(lap.seconds).hours}:{formatTime(lap.seconds).minutes}:
-            {formatTime(lap.seconds).seconds}
-          </p>
-        ))}
+        {laps.map((lap) => {
+          const durationSeconds =
+            lap.seconds - (lap.last_question_seconds || 0);
+          const time = formatTime(durationSeconds);
+
+          return (
+            <p key={lap.id}>
+              {lap.correctly ? "✅" : "❌"} - {lap.question_id} - {time.hours}:
+              {time.minutes}:{time.seconds}
+            </p>
+          );
+        })}
       </ContainerListQuestions>
 
       <AddQuestionDialog />

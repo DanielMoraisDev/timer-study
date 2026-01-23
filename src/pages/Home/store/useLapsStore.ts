@@ -5,6 +5,7 @@ export type Lap = {
   question_id: string;
   seconds: number;
   correctly: boolean;
+  last_question_seconds: number;
   reason?: string;
   createdAt: number;
 };
@@ -16,14 +17,14 @@ type LapsState = {
     question_id: string,
     seconds: number,
     correctly: boolean,
+    last_question_seconds: number,
     reason?: string,
   ) => void;
 };
 
 export const useLapsStore = create<LapsState>((set) => ({
   laps: [],
-
-  addLap: (question_id, seconds, correctly, reason) =>
+  addLap: (question_id, seconds, correctly, last_question_seconds, reason) =>
     set((state) => ({
       laps: [
         {
@@ -32,6 +33,7 @@ export const useLapsStore = create<LapsState>((set) => ({
           seconds: seconds,
           correctly: correctly,
           reason: reason,
+          last_question_seconds: last_question_seconds,
           createdAt: Date.now(),
         },
         ...state.laps,
