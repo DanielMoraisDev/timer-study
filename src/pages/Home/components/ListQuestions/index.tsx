@@ -1,4 +1,4 @@
-import { SquarePen, Underline } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import {
   ButtonListQuestions,
   ContainerQuestionListQuestions,
@@ -9,7 +9,7 @@ import {
 import { formatTime } from "../../../../utils/formatTime";
 import { useLapsStore } from "../../store/useLapsStore";
 import { useUpdateQuestionDialog } from "../../hooks/useUpdateQuestionDialog.ts";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTimer } from "../../hooks/useTimer.ts";
 
 const ListQuestions = () => {
