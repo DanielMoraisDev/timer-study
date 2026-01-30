@@ -48,66 +48,83 @@ const EndQuestionsDialog = () => {
   ) => {
     const percentageFails = (fails * 100) / totalQuestions;
 
-    if (percentageFails < 1) return performanceGeneralClassifierList[0];
-    if (percentageFails <= 10) return performanceGeneralClassifierList[1];
-    if (percentageFails <= 50) return performanceGeneralClassifierList[2];
-    return performanceGeneralClassifierList[3];
+    const data = {
+      perFails: percentageFails + "%",
+      avaliation: performanceGeneralClassifierList[3],
+    };
+
+    if (percentageFails < 1)
+      data.avaliation = performanceGeneralClassifierList[0];
+    if (percentageFails <= 10)
+      data.avaliation = performanceGeneralClassifierList[1];
+    if (percentageFails <= 50)
+      data.avaliation = performanceGeneralClassifierList[2];
+    data.avaliation = performanceGeneralClassifierList[3];
+
+    return data;
   };
 
   const handleDownloadQuestions = () => {
     if (nameArchive === "") return;
 
-    const header = `RELATÓRIO DE QUESTÕES\nGerado em: ${new Date().toLocaleString()}\n`;
-    const separator = "------------------------------------------\n";
+    // 1. Cálculos de Performance (mantendo a lógica que você já tem)
+    const correct = laps.filter((l) => l.correctly).length;
+    const wrong = laps.length - correct;
+    const generalPerformance = classifyGeneralPerformance(laps.length, wrong);
 
-    let correct = 0;
     const reasonCounts: Record<string, number> = {};
-
-    const content = laps
-      .map((lap) => {
-        if (lap.correctly) {
-          correct++;
-        } else if (lap.reason) {
-          reasonCounts[lap.reason] = (reasonCounts[lap.reason] || 0) + 1;
-        }
-
-        const duration = lap.seconds - lap.last_question_seconds;
-        return (
-          [
-            `Questão: ${lap.question_id}`,
-            `Status: ${lap.correctly ? "ACERTOU" : "ERROU"}`,
-            `Tempo gasto: ${duration} segundos`,
-            `Desempenho: ${classifyPerformance(duration)}`,
-            lap.reason ? `- Motivo do erro: ${lap.reason}` : null,
-          ]
-            .filter(Boolean)
-            .join("\n") + "\n"
-        );
-      })
-      .join(`\n${separator}\n`);
-
-    const generalPerformance = classifyGeneralPerformance(
-      laps.length,
-      laps.length - correct,
-    );
+    laps.forEach((l) => {
+      if (!l.correctly && l.reason) {
+        reasonCounts[l.reason] = (reasonCounts[l.reason] || 0) + 1;
+      }
+    });
 
     const topReasons = Object.entries(reasonCounts)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 2)
+      .slice(0, 1) // Pegando apenas o principal motivo para ser mais direto
       .map(([reason]) => reason);
 
-    const status = `Questões acertadas: ${correct} - Questões erradas: ${laps.length - correct}\n\nOs motivos pelos quais errou mais questões:\n${topReasons.map((reason, index) => `${index + 1}º motivo: ${reason}\n`)}\nPerformance Geral: ${generalPerformance}\n`;
+    // 2. Cabeçalho Minimalista com Emojis
+    const header = `📊 RELATÓRIO DE ESTUDOS\n📅 ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}\n`;
 
-    const finalString = `${header}\n${status}\n${separator}\n${content}`;
+    const summary = [
+      `✅ Acertos: ${correct}`,
+      `❌ Erros: ${wrong}`,
+      `📉 Taxa de Erro: ${generalPerformance.perFails}`,
+      `💬 Feedback: ${generalPerformance.avaliation}`,
+      topReasons.length > 0
+        ? `⚠️ Principal motivo de erro: ${topReasons[0]}`
+        : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
 
+    const separator = "\n" + "=".repeat(30) + "\n";
+
+    // 3. Listagem de Questões Simplificada
+    const content = laps
+      .map((lap) => {
+        const duration = lap.seconds - lap.last_question_seconds;
+        const statusEmoji = lap.correctly ? "✅" : "❌";
+
+        return [
+          `${statusEmoji} Questão ${lap.question_id}`,
+          `   ⏱️ ${duration}s | ${classifyPerformance(duration)}`,
+          !lap.correctly && lap.reason ? `   📌 Motivo: ${lap.reason}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n");
+      })
+      .join("\n\n");
+
+    const finalString = `${header}${separator}\n${summary}\n${separator}\n${content}`;
+
+    // 4. Lógica de Download (Blob)
     const blob = new Blob([finalString], { type: "text/plain" });
-
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-
     link.href = url;
     link.download = `${nameArchive}.txt`;
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
