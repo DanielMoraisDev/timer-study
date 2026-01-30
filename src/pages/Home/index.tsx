@@ -10,6 +10,7 @@ import { useEndQuestionsDialog } from "./hooks/useEndQuestionsDialog";
 import EndQuestionsDialog from "./components/EndQuestionsDialog";
 import { formatTime } from "../../utils/formatTime";
 import ListQuestions from "./components/ListQuestions";
+import UpdateQuestionDialog from "./components/UpdateQuestionDialog";
 
 function Home() {
   const { totalSeconds, isPaused, pause, resume } = useTimer();
@@ -94,6 +95,7 @@ function Home() {
 
       <MissQuestionDialog />
       <EndQuestionsDialog />
+      <UpdateQuestionDialog />
     </RootHome>
   );
 }

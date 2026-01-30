@@ -7,7 +7,7 @@ interface UpdateQuestionDialogProps {
 export const OverlayUpdateQuestionDialog = styled.div<UpdateQuestionDialogProps>`
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 30;
   background-color: rgb(0, 0, 0, 0.3);
   transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;

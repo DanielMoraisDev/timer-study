@@ -20,25 +20,12 @@ import { global } from "../../../../global";
 import { useLapsStore } from "../../store/useLapsStore";
 import { updateQuestion } from "../../scripts/actionsStudy";
 
-type UpdateQuestionDialogProps = {
-  id: string | undefined;
-};
-
-const UpdateQuestionDialog = ({ id }: UpdateQuestionDialogProps) => {
-  if (!id) return;
-
-  const { open, closeDialog } = useUpdateQuestionDialog();
+const UpdateQuestionDialog = () => {
+  const { open, selectedId, closeDialog } = useUpdateQuestionDialog();
   const laps = useLapsStore((s) => s.laps);
-  const selectedLap = laps.find((lap) => lap.id == id);
   const updateQuestionDialogRef = useRef<HTMLDivElement>(null);
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
   const [selectedCorrectly, setSelectedCorrectly] = useState<boolean>(true);
-
-  const handleCloseDialog = () => {
-    setSelectedCorrectly(true);
-    setSelectedReason(null);
-    closeDialog();
-  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -57,8 +44,18 @@ const UpdateQuestionDialog = ({ id }: UpdateQuestionDialogProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
+  const selectedLap = laps.find((lap) => lap.id == selectedId);
+
+  if (!selectedId) return;
+
+  const handleCloseDialog = () => {
+    setSelectedCorrectly(true);
+    setSelectedReason(null);
+    closeDialog();
+  };
+
   const handleEndUpdateQuestion = () => {
-    updateQuestion(id, selectedCorrectly, selectedReason);
+    updateQuestion(selectedId, selectedCorrectly, selectedReason);
   };
 
   return (

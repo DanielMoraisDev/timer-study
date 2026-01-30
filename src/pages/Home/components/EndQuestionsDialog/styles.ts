@@ -43,6 +43,22 @@ export const ContainerEndQuestionsDialog = styled.div`
   }
 `;
 
+export const ContainerRevisionQuestionsEndQuestionsDialog = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+`;
+
 export const TitleContainerEndQuestionsDialog = styled.h2`
   font-size: 1.25rem;
+`;
+
+export const NameListQuestionsDownload = styled.input`
+  padding: 10px;
 `;

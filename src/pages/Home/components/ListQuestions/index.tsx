@@ -11,18 +11,15 @@ import { useLapsStore } from "../../store/useLapsStore";
 import { useUpdateQuestionDialog } from "../../hooks/useUpdateQuestionDialog.ts";
 import { useEffect, useState } from "react";
 import { useTimer } from "../../hooks/useTimer.ts";
-import UpdateQuestionDialog from "../UpdateQuestionDialog/index.tsx";
 
 const ListQuestions = () => {
   const { pause, resume } = useTimer();
   const laps = useLapsStore((s) => s.laps);
   const { openDialog: openDialogUpdateQuestions, open: openUpdateQuestions } =
     useUpdateQuestionDialog();
-  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
   const handleUpdateQuestions = (selectedId: string) => {
-    setSelectedId(selectedId);
-    openDialogUpdateQuestions();
+    openDialogUpdateQuestions(selectedId);
   };
 
   useEffect(() => {
@@ -31,7 +28,6 @@ const ListQuestions = () => {
       return;
     }
 
-    setSelectedId(undefined);
     resume();
     return;
   }, [openUpdateQuestions]);
@@ -57,8 +53,6 @@ const ListQuestions = () => {
           ) : null}
         </>
       ))}
-
-      <UpdateQuestionDialog id={selectedId} />
     </RootListQuestions>
   );
 };
